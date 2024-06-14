@@ -9,7 +9,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as etree
 
-class KmlToGpxError(Exception):
+class ToolsError(Exception):
     pass
 
 def haversine_distance(
@@ -301,3 +301,180 @@ def convert_to_gpx(path, out, verbose = False):
             path = out, 
             verbose = verbose)
         
+def _get_cluster(point, points, max_):
+    final = []
+    for i in points:
+        for j in i:
+            dis = haversine_distance(
+                latitude_1 = point[0] , 
+                longitude_1= point[1], 
+                latitude_2 =j[0]  , 
+                longitude_2= j[1] )
+            if dis <= max_:
+                final.append((j[0], j[1]))
+    return final
+
+def mile_markers(path, out, reverse = False, verbose = False):
+    root = kml.make_write_root()
+    document_e =etree.Element("Document") 
+    root.append(document_e)
+    tracks = tracks_from_file(path = path)
+    for track in tracks:
+        points = track['points']
+        miles = create_mile_markers(
+                points = points, 
+                reverse = reverse)
+        for mile in miles:
+            p =kml.make_point(
+                    name = mile['mile'], 
+                    latitude = mile['latitude'], 
+                    longitude =  mile['longitude'], 
+                    description = None,
+                    elevation = mile['elevation'])
+            document_e.append(p)
+    write_to_path(
+            root = root, 
+            path = out,
+            verbose = verbose)
+
+def prune_by_location(
+        points:list, 
+        start:tuple = None, 
+        end:tuple = None,
+        verbose:bool = None):
+    if start != None and end != None:
+        raise ToolsError('must pass either start or end')
+    if not start:
+        start = 0
+    else:
+        n = find_nearest(
+                point = start, 
+                points = points, 
+                verbose = verbose)
+        start = n[0]
+    if not end:
+        end  = len(l[0]['points']) -1
+    else:
+        n = find_nearest(
+                point = end, 
+                points = points, 
+                verbose = verbose)
+        end = n[0]
+    points = points[start:end]
+    return points
+
+def location_prune(
+        path,
+        out,
+        start = None,
+        end = None,
+        verbose = False,
+        line_name= 'new-line'
+        ):
+    l = tracks_from_file(
+            path = path, 
+            verbose = verbose)
+    points = prune_by_location(
+            points = l[0]['points'],
+            start = start,
+            end = end,
+            verbose = verbose
+            )
+    root = kml.make_write_root()
+    line_element = kml.make_line(name = line_name, points = points)
+    root.append(line_element)
+    write_to_path(root = root, path = out,verbose = verbose)
+
+def convert_string_to_points(s):
+    if s == None:
+        return
+    st, end = s.split(',')
+    st = float(st)
+    end = float(end)
+    return st, end
+
+def mult_lines_to_one(
+        paths, 
+        out, 
+        verbose = False,
+        line_name = 'new-line'
+        ):
+    points = []
+    for path in paths:
+        tracks = tracks_from_file(path = path)
+        for track in tracks: 
+            for i in track['points']:
+                points.append(i)
+    line_element = kml.make_line(
+            name = line_name, points = points)
+    root = kml.make_write_root()
+    root.append(line_element)
+    write_to_path(
+            root = root, 
+            path = out,
+            verbose = verbose)
+
+def polygon_from_files(
+        paths,
+        out,
+        verbose = False,
+        polygon_name = 'new-polygon'
+        ):
+    points = []
+    for path in paths:
+        tracks = tracks_from_file(path = path)
+        for track  in  tracks:
+            for j in track['points']:
+                points.append(j)
+
+    line_element = kml.make_polygon(
+            name = polygon_name, 
+            points = points, 
+            verbose = verbose)
+    root = kml.make_write_root()
+    root.append(line_element)
+    write_to_path(
+            root = root, 
+            path = out,
+            verbose = verbose)
+
+def prune_to_top(
+        path,
+        out,
+        verbose = False,
+        line_name= 'to-top'):
+    l = tracks_from_file(path)
+    assert len(l) == 1
+    high_point =  find_highest(
+            points = l[0]['points'], verbose = verbose)
+    points = l[0]['points'][0:high_point[0]]
+    line_element = kml.make_line(name = 'new-line', points = points)
+    root = kml.make_write_root()
+    root.append(line_element)
+    write_to_path(
+            root = root, 
+            path = out,
+            verbose = verbose)
+
+def smooth_func(
+        path,
+        out, 
+        verbose = False,
+        line_name = 'smoothed-line'
+        ):
+    tracks = tracks_from_file(
+            path = path, 
+            verbose = verbose)
+    assert len(tracks) == 1
+    smoothed_points = smooth.process(
+            points = tracks[0]['points'],
+            verbose = args.verbose
+            )
+    line_element = kml.make_line(
+            name = line_name, 
+            points = smoothed_points)
+    root = kml.make_write_root()
+    root.append(line_element)
+    write_to_path(root = root, 
+            path = out,
+            verbose = verbose)

@@ -29,31 +29,6 @@ def tracks_from_file(path, verbose = False):
     return tree
 
 
-def prune_by_location(
-        points:list, 
-        start:tuple = None, 
-        end:tuple = None,
-        verbose:bool = None):
-    if start != None and end != None:
-        raise KmlError('must pass either start or end')
-    if not start:
-        start = 0
-    else:
-        n = find_nearest = tools.find_nearest(
-                point = start, 
-                points = points, 
-                verbose = verbose)
-        start = n[0]
-    if not end:
-        end  = len(l[0]['points']) -1
-    else:
-        n = find_nearest = tools.find_nearest(
-                point = end, 
-                points = points, 
-                verbose = verbose)
-        end = n[0]
-    points = points[start:end]
-    return points
 
 def tracks_from_kml(path, verbose = False):
     tree = tools.get_tree(path = path)
