@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>fourth_8_ave</name>
+    <Style id="line-000000-1200-nodesc-normal">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.2</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="line-000000-1200-nodesc-highlight">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.8</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="line-000000-1200-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-000000-1200-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-000000-1200-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>48th ave</name>
+      <styleUrl>#line-000000-1200-nodesc</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          -122.3928122,47.582692,0
+          -122.3928337,47.5823844,0
+          -122.3928229,47.581364,0
+          -122.3928176,47.5812229,0
+          -122.3933057,47.5812156,0
+          -122.39381,47.5812301,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

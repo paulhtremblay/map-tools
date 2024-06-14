@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>temp</name>
+    <Style id="line-000000-1200-nodesc-normal">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.2</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="line-000000-1200-nodesc-highlight">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.8</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="line-000000-1200-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-000000-1200-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-000000-1200-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>name-of-line1</name>
+      <styleUrl>#line-000000-1200-nodesc</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          -121.7368611,47.5042984,0
+          -121.7369899,47.5031678,0
+          -121.7366036,47.5018921,0
+          -121.7366036,47.5003845,0
+          -121.7359599,47.4988189,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>name-of-line2</name>
+      <styleUrl>#line-000000-1200-nodesc</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          -121.7319259,47.5027909,0
+          -121.7315826,47.5018632,0
+          -121.7311963,47.5008484,0
+          -121.7312392,47.4991668,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

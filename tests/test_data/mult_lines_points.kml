@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>test22</name>
+    <Style id="icon-1899-0288D1-nodesc-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-nodesc-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="line-000000-1200-nodesc-normal">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.2</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="line-000000-1200-nodesc-highlight">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.8</width>
+      </LineStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="line-000000-1200-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-000000-1200-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-000000-1200-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>line1</name>
+      <styleUrl>#line-000000-1200-nodesc</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          -122.3924134,47.5840919,0
+          -122.3913405,47.5839327,0
+          -122.3900316,47.5836866,0
+          -122.3889158,47.584034,0
+          -122.3879073,47.5839327,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>wp1</name>
+      <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -122.3894308,47.5847577,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>wp2</name>
+      <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -122.3912333,47.5845116,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Line 2</name>
+      <styleUrl>#line-000000-1200-nodesc</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          -122.3871348,47.5836143,0
+          -122.388594,47.5833682,0
+          -122.3899887,47.5830787,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>
