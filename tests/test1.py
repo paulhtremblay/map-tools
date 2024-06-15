@@ -1,7 +1,6 @@
 import os
 import sys
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-print(CURRENT_DIR)
 ONE_UP = os.path.split(CURRENT_DIR)[0]
 sys.path.append(ONE_UP)
 

@@ -14,33 +14,44 @@ def dist(p0, p1) :
 	c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 	return Re * c
 
+class Keeper:
+
+    def __init__(self):
+        self.keeps = []
+
+    def add(self, point):
+        pass
+
 
 def process(
-        points, maxdistance = 5, maxinterval = 10, debug = False,
+        points, final_points = [], maxdistance = 5, maxinterval = 10, debug = False,
         verbose =False):
-    bounds = (extract(points[0]), extract(points[-1]))
     if debug:
-        print(f'bounds are {bounds}')
+        print('processing')
+        print(f'len of data is {len(points)}')
+    bounds = (extract(points[0]), extract(points[-1]))
     idx,maxd = None,None
     for counter, i in enumerate(points):
         if counter == 0:
             continue
         current_points_in_radians = extract(i)
-        if debug:
-            print(f'this is {current_points_in_radians} and type is {type(current_points_in_radians)}')
         d = greatcircle_point_distance(bounds, current_points_in_radians)
-        if debug:
-            print(f'd is {d} and type is {type(d)}')
         if maxd is None or d > maxd :
             maxd = d
             idx = counter
-        if debug:
-            print(f'maxd is {maxd} and idx is {idx}')
     if maxd is not None and maxd  > maxdistance :
         # Keep this point if it is at least 'maxdistance' from the
         # connecting arc, and run 'process' on the two subsegments
-        process(points[:idx], maxdistance, maxinterval)
-        process(points[idx:], maxdistance, maxinterval)
+        process(
+                points = points[:idx],   
+                maxdistance = maxdistance, 
+                maxinterval = maxinterval, 
+                final_points = final_points)
+        process(
+                points = points[idx:],  
+                maxdistance = maxdistance, 
+                maxinterval = maxinterval, 
+                final_points = final_points)
     elif maxinterval is not None and maxinterval > 0 : #Python 3 fix                            
         prev = bounds[0]
         fin = bounds[1]
@@ -53,8 +64,10 @@ def process(
                 # given limit.
                 # FIXME might be better to take the previous point, to make
                 # the limit a guaranteed one.
+                #final_points.append(points[counter])
+                final_points.append(i)
                 prev = current_points_in_radians
-    return points
+    return final_points
 
 
 # Given a pair of polar coordinates and a third, find the shortest great circle
