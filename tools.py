@@ -4,6 +4,8 @@ from statistics import median
 import kml
 import gpx
 import smooth
+import pprint
+pp = pprint.PrettyPrinter(indent = 4)
 
 try:
     from lxml import etree
@@ -399,3 +401,130 @@ def smooth_func(
     write_to_path(root = root, 
             path = out,
             verbose = verbose)
+
+
+def avg_points(points):
+    prev_point = None
+    dis = []
+    for i in points:
+        if not prev_point:
+            prev_point = i
+            continue
+        d =  haversine_distance(
+                latitude_1 =  prev_point[0], 
+                longitude_1 = prev_point[1], 
+                latitude_2 =  i[0], 
+                longitude_2 =  i[1])     
+        dis.append(d)
+        prev_point = i
+    return sum(dis)/len(dis),  median(dis)
+
+def stats(
+        path,
+        verbose = False
+        ):
+    tracks = tracks_from_file(
+            path = path, 
+            verbose = verbose)
+    for track in tracks:
+        points = track['points']
+        a = avg_points(points = points)
+
+def get_within_distance(point, points, distance):
+    final = []
+    indices = []
+    for point_ in points:
+        d =  haversine_distance(
+            latitude_1 =  point_[0], 
+            longitude_1 =  point_[1], 
+            latitude_2 =  point[0], 
+            longitude_2 =  point[1])     
+        if d <= distance:
+            final.append(point_)
+            indices.append(0)
+    return final, indices
+
+def get_new_current(clus, points):
+    min_ = (None, None)
+    for i in clus:
+        for counter, j in enumerate(points):
+            d =  haversine_distance(
+                latitude_1 =  i[0], 
+                longitude_1 =  i[1], 
+                latitude_2 =  j[0], 
+                longitude_2 =  j[1])     
+            if min_[1] == None or d < min_[1]:
+                min_ = (j, d)
+    return min_[0]
+
+
+def cluster_it(points, cluster_distance, max_iterations):
+    final = []
+    current = points[0]
+    counter = 0
+    temp_points = []
+    for i in points:
+        temp_points.append(i)
+    while 1:
+        counter += 1
+        counter2 = 0
+        while 1:
+            counter2 += 1
+            clus, indices = get_within_distance(
+                    point = current,
+                    points = temp_points,
+                    distance = cluster_distance * counter2
+                    )
+            if len(clus) > 0:
+                break
+            else:
+                print('did not find cluster, trying again')
+            if counter2 > 10:
+                raise ValueError('tried 10 times and could not find cluster')
+        final.append(clus)
+        temp = []
+        for i in temp_points:
+            if i in clus:
+                continue
+            temp.append(i)
+        temp_points = temp
+        n_current = get_new_current(clus, temp_points)
+        if not n_current:
+            return final, temp_points, current
+        d_temp =  haversine_distance(
+                latitude_1 =  n_current[0], 
+                longitude_1 =  n_current[1], 
+                latitude_2 =  current[0], 
+                longitude_2 =  current[1])     
+        #print(f'dis between old and new is {d_temp}')
+        if d_temp > 1000:
+            return final, temp_points, current
+        current = n_current
+        if current in clus:
+            assert False
+        if counter == max_iterations or len(temp_points) == 0:
+            break
+
+    return final, temp_points, current
+
+def med_of_clusters(clusters):
+    final = []
+    for i in clusters:
+        lat, lon = _get_median(i)
+        final.append((lat, lon, 0))
+    return final
+
+def cluster(path,
+        verbose = False
+        ):
+    tracks = tracks_from_file(
+            path = path, 
+            verbose = verbose)
+    assert len(tracks) == 1
+    points = tracks[0]['points']
+    clusters, remaining, next_ = cluster_it(
+            points = points,
+            cluster_distance = 50,
+            max_iterations = 200)
+    meds = med_of_clusters(clusters)
+    return clusters, meds, remaining, next_

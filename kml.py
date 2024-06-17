@@ -14,7 +14,10 @@ def swap_long_lat(points):
     """
     final = []
     for i in points:
-        final.append((i[1], i[0], i[2]))
+        if len(i) == 3:
+            final.append((i[1], i[0], i[2]))
+        else:
+            final.append((i[1], i[0]))
     return final
 
 
@@ -92,7 +95,10 @@ def make_point_strings(points):
         return points
     coordinates_list = []
     for i in points:
-        coordinates_list.append(f'{i[0]},{i[1]},{i[2]}')
+        if len(i) == 3:
+            coordinates_list.append(f'{i[0]},{i[1]},{i[2]}')
+        else:
+            coordinates_list.append(f'{i[0]},{i[1]}')
     coordinates_string = '\n'.join(coordinates_list)
     return coordinates_string
 
