@@ -273,7 +273,7 @@ def prune_by_location(
                 verbose = verbose)
         start = n[0]
     if not end:
-        end  = len(l[0]['points']) -1
+        end  = len(points) -1
     else:
         n = find_nearest(
                 point = end, 
