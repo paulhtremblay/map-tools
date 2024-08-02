@@ -4,7 +4,9 @@ from statistics import median
 import kml
 import gpx
 import smooth
+import optimize
 import pprint
+import csv
 pp = pprint.PrettyPrinter(indent = 4)
 
 try:
@@ -528,3 +530,40 @@ def cluster(path,
             max_iterations = 200)
     meds = med_of_clusters(clusters)
     return clusters, meds, remaining, next_
+
+def optimize_func(
+        path, out, line_name = 'new-line', verbose = False):
+    tracks = tracks_from_file(
+            path = path, 
+            verbose = verbose)
+    assert len(tracks) == 1
+    o_points = optimize.optimize_points(
+            points = tracks[0]['points']
+            )
+    line_element = kml.make_line(
+            name = line_name, 
+            points = o_points
+            )
+    root = kml.make_write_root()
+    root.append(line_element)
+    write_to_path(root = root, 
+            path = out,
+            verbose = verbose)
+
+def csv_func(
+        path, out,  verbose = False):
+    tracks = tracks_from_file(
+            path = path, 
+            verbose = verbose)
+    assert len(tracks) == 1
+    with open(out, 'w') as write_obj:
+        header = ['time', 'elevation']
+        csv_writer = csv.writer(write_obj)
+        for counter, i in enumerate(tracks[0]['points']):
+            if counter == 0:
+                csv_writer.writerow(['time', 'elevation'])
+            the_time = None
+            if len(i) == 4:
+                the_time = i[3].strftime('%Y-%m-%d %H:%M:%S')
+            csv_writer.writerow([the_time, round(i[2] * 3.28084)])
+

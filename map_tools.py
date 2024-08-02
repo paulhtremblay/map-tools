@@ -7,6 +7,7 @@ import math
 import kml
 import tools
 import gpx
+import optimize
 
 
 pp = pprint.PrettyPrinter(indent= 4)
@@ -86,6 +87,24 @@ def _get_args():
     parser_smooth.add_argument("--out", '-o',  required = True,  
             help="out path of file")
     parser_smooth.set_defaults(func=smooth_func)
+
+    optimize = subparsers.add_parser(
+            'optimize', 
+            help='optimize')
+    optimize.add_argument("--verbose", '-v',  action ='store_true')  
+    optimize.add_argument("path", help="path of file")
+    optimize.add_argument("--out", '-o',  required = True,  
+            help="out path of file")
+    optimize.set_defaults(func=optimize_func)
+
+    optimize = subparsers.add_parser(
+            'csv', 
+            help='make csv file')
+    optimize.add_argument("--verbose", '-v',  action ='store_true')  
+    optimize.add_argument("path", help="path of file")
+    optimize.add_argument("--out", '-o',  required = True,  
+            help="out path of file")
+    optimize.set_defaults(func=csv_func)
     
 
     args = parser.parse_args()
@@ -151,6 +170,18 @@ def polygon_from_files(args):
 
 def smooth_func(args):
     tools.smooth_func(
+            path = args.path,
+            out = args.out,
+            verbose = args.verbose)
+
+def optimize_func(args):
+    tools.optimize_func(
+            path = args.path,
+            out = args.out,
+            verbose = args.verbose)
+
+def csv_func(args):
+    tools.csv_func(
             path = args.path,
             out = args.out,
             verbose = args.verbose)
